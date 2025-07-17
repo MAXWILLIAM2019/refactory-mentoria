@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
+import { Eye, EyeOff } from "lucide-react"
 import {
   Dialog,
   DialogContent,
@@ -26,6 +27,8 @@ export function LoginAdmForm({
   ...props
 }: React.ComponentProps<"div">) {
   const [selectedUserType, setSelectedUserType] = useState<string>("")
+  const [showPassword, setShowPassword] = useState(false)
+  const [showDialogPassword, setShowDialogPassword] = useState(false)
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -89,7 +92,28 @@ export function LoginAdmForm({
                     Esqueceu sua senha?
                   </a>
                 </div>
-                <Input id="password" type="password" required />
+                <div className="relative">
+                  <Input 
+                    id="password" 
+                    type={showPassword ? "text" : "password"} 
+                    className="pr-12" 
+                    required 
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 py-2 !bg-transparent hover:!bg-transparent focus:!bg-transparent active:!bg-transparent focus-visible:!bg-transparent data-[state=open]:!bg-transparent"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? "Esconder senha" : "Mostrar senha"}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4 text-primary" />
+                    ) : (
+                      <Eye className="h-4 w-4 text-primary" />
+                    )}
+                  </Button>
+                </div>
               </div>
               <Button type="submit" className="w-full">
                 Entrar
@@ -142,12 +166,29 @@ export function LoginAdmForm({
                        </Select>
                      </div>
                                          <div className="grid gap-2">
-                       <Label htmlFor="password">Senha</Label>
-                       <Input
-                         id="password"
-                         type="password"
-                         placeholder="Crie uma senha segura"
-                       />
+                       <Label htmlFor="dialog-password">Senha</Label>
+                       <div className="relative">
+                         <Input
+                           id="dialog-password"
+                           type={showDialogPassword ? "text" : "password"}
+                           className="pr-12"
+                           placeholder="Crie uma senha segura"
+                         />
+                         <Button
+                           type="button"
+                           variant="ghost"
+                           size="sm"
+                           className="absolute right-0 top-0 h-full px-3 py-2 !bg-transparent hover:!bg-transparent focus:!bg-transparent active:!bg-transparent focus-visible:!bg-transparent data-[state=open]:!bg-transparent"
+                           onClick={() => setShowDialogPassword(!showDialogPassword)}
+                           aria-label={showDialogPassword ? "Esconder senha" : "Mostrar senha"}
+                         >
+                           {showDialogPassword ? (
+                             <EyeOff className="h-4 w-4 text-primary" />
+                           ) : (
+                             <Eye className="h-4 w-4 text-primary" />
+                           )}
+                         </Button>
+                       </div>
                      </div>
                   </div>
                   <DialogFooter>
