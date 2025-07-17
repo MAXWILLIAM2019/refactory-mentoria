@@ -1,4 +1,4 @@
-# Sistema de Mentoria - ShadCN UI
+# Sistema de Mentoria
 
 Um sistema moderno de mentoria construído com React, TypeScript e ShadCN UI, apresentando um dashboard elegante e responsivo com suporte a dark mode.
 
