@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './components/theme-provider';
 import Page from './app/dashboard/page';
 import LoginPage from './app/login/page';
+import LoginAdmPage from './app/loginAdm/page';
 
 function App() {
   return (
@@ -20,7 +21,14 @@ function App() {
                     href="/login" 
                     className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 px-6 rounded-lg transition-colors duration-200 inline-block"
                   >
-                    Fazer Login
+                    Login Adminis
+                  </a>
+                  <br />
+                  <a 
+                    href="/loginAdm" 
+                    className="bg-destructive hover:bg-destructive/90 text-destructive-foreground font-semibold py-3 px-6 rounded-lg transition-colors duration-200 inline-block"
+                  >
+                    Login Administrador
                   </a>
                   <br />
                   <a 
@@ -36,6 +44,7 @@ function App() {
           />
           <Route path="/dashboard" element={<Page />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/loginAdm" element={<LoginAdmPage />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
