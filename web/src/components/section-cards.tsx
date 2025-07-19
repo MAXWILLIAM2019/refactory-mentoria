@@ -1,6 +1,8 @@
 import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react"
+import { useState, useEffect } from "react"
 
 import { Badge } from "@/components/ui/badge"
+import { Skeleton } from "@/components/ui/skeleton"
 import {
   Card,
   CardAction,
@@ -11,6 +13,45 @@ import {
 } from "@/components/ui/card"
 
 export function SectionCards() {
+  const [carregando, setCarregando] = useState(true)
+
+  // TODO: REMOVER ESTE DELAY SIMULADO - Substituir por loading real baseado em dados da API
+  // Quando implementar dados reais: remover este useEffect e usar loading baseado em dados
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setCarregando(false)
+    }, 6000) // 6 segundos de delay
+
+    return () => clearTimeout(timer)
+  }, [])
+
+  // Componente Skeleton para os cards
+  const CardSkeleton = () => (
+    <Card className="@container/card">
+      <CardHeader>
+        <Skeleton className="h-4 w-24 mb-2" />
+        <Skeleton className="h-8 w-32 mb-2" />
+        <Skeleton className="h-6 w-20" />
+      </CardHeader>
+      <CardFooter className="flex-col items-start gap-1.5">
+        <Skeleton className="h-4 w-40 mb-1" />
+        <Skeleton className="h-3 w-32" />
+      </CardFooter>
+    </Card>
+  )
+
+  // Se estiver carregando, mostra skeletons
+  if (carregando) {
+    return (
+      <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
+        <CardSkeleton />
+        <CardSkeleton />
+        <CardSkeleton />
+        <CardSkeleton />
+      </div>
+    )
+  }
+
   return (
     <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
       <Card className="@container/card">

@@ -4,6 +4,7 @@ import * as React from "react"
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
 
 import { useIsMobile } from "@/hooks/use-mobile"
+import { Skeleton } from "@/components/ui/skeleton"
 import {
   Card,
   CardAction,
@@ -143,12 +144,36 @@ const chartConfig = {
 export function ChartAreaInteractive() {
   const isMobile = useIsMobile()
   const [timeRange, setTimeRange] = React.useState("90d")
+  const [carregando, setCarregando] = React.useState(true)
 
+  // TODO: REMOVER ESTE DELAY SIMULADO - Substituir por loading real baseado em dados da API
+  // Quando implementar dados reais: remover este useEffect e usar loading baseado em dados
   React.useEffect(() => {
-    if (isMobile) {
-      setTimeRange("7d")
-    }
-  }, [isMobile])
+    const timer = setTimeout(() => {
+      setCarregando(false)
+    }, 6000) // 6 segundos de delay
+
+    return () => clearTimeout(timer)
+  }, [])
+
+  // Componente Skeleton para o gráfico
+  const ChartSkeleton = () => (
+    <Card className="@container/card">
+      <CardHeader>
+        <Skeleton className="h-6 w-32 mb-2" />
+        <Skeleton className="h-4 w-48 mb-4" />
+        <Skeleton className="h-8 w-32" />
+      </CardHeader>
+      <CardContent>
+        <Skeleton className="h-64 w-full" />
+      </CardContent>
+    </Card>
+  )
+
+  // Se estiver carregando, mostra skeleton
+  if (carregando) {
+    return <ChartSkeleton />
+  }
 
   const filteredData = chartData.filter((item) => {
     const date = new Date(item.date)
