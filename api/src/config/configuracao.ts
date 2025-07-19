@@ -27,7 +27,7 @@ export const SERVIDOR = {
  * Configurações de CORS
  */
 export const CORS = {
-  origem: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origem: 'http://localhost:5173', // Forçado para corrigir CORS
   credenciais: true,
   metodosPermitidos: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'] as string[],
   cabecalhosPermitidos: ['Content-Type', 'Authorization'] as string[]
@@ -126,7 +126,7 @@ export const API = {
  */
 export const EXTERNOS = {
   frontend: {
-    url: process.env.FRONTEND_URL || 'http://localhost:3000',
+    url: 'http://localhost:5173', // Forçado para corrigir CORS
     urlProducao: process.env.FRONTEND_PROD_URL
   },
   webhook: {

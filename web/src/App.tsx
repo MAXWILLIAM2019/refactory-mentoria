@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './components/theme-provider';
+import { Toaster } from './components/ui/sonner';
 import Page from './app/dashboard/page';
 import LoginPage from './app/login/page';
 import LoginAdmPage from './app/loginAdm/page';
@@ -47,6 +48,7 @@ function App() {
           <Route path="/loginAdm" element={<LoginAdmPage />} />
         </Routes>
       </BrowserRouter>
+      <Toaster />
     </ThemeProvider>
   );
 }
