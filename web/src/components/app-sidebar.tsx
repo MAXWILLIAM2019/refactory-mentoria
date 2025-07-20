@@ -9,7 +9,9 @@ import {
   IconFileWord,
   IconFolder,
   IconHelp,
+  IconHistory,
   IconListDetails,
+  IconMessageCircle,
   IconReport,
   IconSearch,
   IconSettings,
@@ -42,23 +44,33 @@ const data = {
       url: "#",
       icon: IconDashboard,
     },
+    // {
+    //   title: "Lifecycle",
+    //   url: "#",
+    //   icon: IconListDetails,
+    // },
     {
-      title: "Lifecycle",
-      url: "#",
-      icon: IconListDetails,
-    },
-    {
-      title: "Analytics",
+      title: "Estatísticas",
       url: "#",
       icon: IconChartBar,
     },
     {
-      title: "Projects",
+      title: "Histórico",
+      url: "#",
+      icon: IconHistory,
+    },
+    {
+      title: "Chat",
+      url: "#",
+      icon: IconMessageCircle,
+    },
+    {
+      title: "Planos",
       url: "#",
       icon: IconFolder,
     },
     {
-      title: "Team",
+      title: "Alunos",
       url: "#",
       icon: IconUsers,
     },
@@ -113,20 +125,20 @@ const data = {
   ],
   navSecondary: [
     {
-      title: "Settings",
+      title: "Configurações",
       url: "#",
       icon: IconSettings,
     },
-    {
-      title: "Get Help",
-      url: "#",
-      icon: IconHelp,
-    },
-    {
-      title: "Search",
-      url: "#",
-      icon: IconSearch,
-    },
+    // {
+    //   title: "Get Help",
+    //   url: "#",
+    //   icon: IconHelp,
+    // },
+    // {
+    //   title: "Search",
+    //   url: "#",
+    //   icon: IconSearch,
+    // },
   ],
   documents: [
     {
@@ -134,22 +146,22 @@ const data = {
       url: "#",
       icon: IconDatabase,
     },
-    {
-      name: "Reports",
-      url: "#",
-      icon: IconReport,
-    },
-    {
-      name: "Word Assistant",
-      url: "#",
-      icon: IconFileWord,
-    },
+    // {
+    //   name: "Reports",
+    //   url: "#",
+    //   icon: IconReport,
+    // },
+    // {
+    //   name: "Word Assistant",
+    //   url: "#",
+    //   icon: IconFileWord,
+    // },
   ],
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="offcanvas" {...props}>
+    <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>

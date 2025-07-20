@@ -128,7 +128,7 @@ export function LoginAdmForm({
       console.log('📨 Resposta da API:', resposta)
       
       // Verifica tanto 'sucesso' quanto 'success' (inconsistência da API)
-      const sucesso = resposta.sucesso || resposta.success
+      const sucesso = resposta.sucesso || resposta.sucesso
       
       if (sucesso) {
         console.log('✅ Sucesso detectado, mostrando toast...')
@@ -156,7 +156,7 @@ export function LoginAdmForm({
         console.log('🚪 Dialog fechado')
       } else {
         console.log('❌ Resposta não indica sucesso:', resposta)
-        const mensagem = resposta.mensagem || resposta.message || 'Erro inesperado no cadastro'
+        const mensagem = resposta.mensagem || resposta.mensagem || 'Erro inesperado no cadastro'
         toast.error(mensagem, {
           duration: 5000, // 5 segundos para erros
           style: {
