@@ -5,7 +5,8 @@ import {
   validarToken, 
   testeAuth,
   cadastrarUsuario,
-  criarAluno
+  criarAluno,
+  fazerLogout
 } from '../controllers/autenticacaoController';
 import { 
   autenticacao, 
@@ -62,5 +63,12 @@ router.post('/validar', validarToken);
  * @access Privado (requer token JWT válido)
  */
 router.get('/me', autenticacao, obterDadosUsuario);
+
+/**
+ * @route POST /api/auth/logout
+ * @desc Faz logout do usuário logado
+ * @access Privado (requer token JWT válido)
+ */
+router.post('/logout', autenticacao, fazerLogout);
 
 export default router; 

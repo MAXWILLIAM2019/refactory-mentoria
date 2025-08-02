@@ -22,6 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { useNavigate } from "react-router-dom"
+import { useAuth } from "@/contexts/AuthContext"
 import servicoAutenticacao from "@/services/servicoAutenticacao"
 import { toast } from "sonner"
 
@@ -30,6 +31,7 @@ export function LoginAdmForm({
   ...props
 }: React.ComponentProps<"div">) {
   const navigate = useNavigate()
+  const { login } = useAuth()
   const [selectedUserType, setSelectedUserType] = useState<string>("")
   const [showPassword, setShowPassword] = useState(false)
   const [showDialogPassword, setShowDialogPassword] = useState(false)
@@ -83,22 +85,21 @@ export function LoginAdmForm({
     try {
       console.log('🔐 Tentando fazer login administrativo:', dadosLogin)
       
-      const resposta = await servicoAutenticacao.fazerLogin(dadosLogin)
+      // Usa o login do AuthContext
+      await login(dadosLogin)
       
-      if (resposta.sucesso) {
-        toast.success('Login realizado com sucesso!', {
-          duration: 3000, // 3 segundos
-          style: {
-            background: '#10b981', // Verde vibrante
-            color: 'white',
-            border: '1px solid #059669'
-          }
-        })
-        console.log('✅ Login administrativo realizado, redirecionando para dashboard')
-        
-        // Redireciona para dashboard
-        navigate('/dashboard')
-      }
+      toast.success('Login realizado com sucesso!', {
+        duration: 3000, // 3 segundos
+        style: {
+          background: '#10b981', // Verde vibrante
+          color: 'white',
+          border: '1px solid #059669'
+        }
+      })
+      console.log('✅ Login administrativo realizado, redirecionando para dashboard')
+      
+      // Redireciona para dashboard
+      navigate('/dashboard')
     } catch (erro: any) {
       console.error('❌ Erro no login administrativo:', erro)
       toast.error(erro.message || 'Erro ao fazer login', {

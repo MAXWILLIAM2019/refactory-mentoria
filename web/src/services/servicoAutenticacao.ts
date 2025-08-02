@@ -107,7 +107,20 @@ const servicoAutenticacao = {
       if (resposta.data.sucesso && resposta.data.token) {
         // Armazena dados da sessão
         this.armazenarToken(resposta.data.token);
-        this.armazenarPapelUsuario(resposta.data.grupo || 'aluno');
+        
+        // Corrige o acesso ao grupo (pode ser string ou objeto)
+        const grupoUsuario = typeof resposta.data.grupo === 'string' 
+          ? resposta.data.grupo 
+          : resposta.data.grupo?.nome || 'aluno';
+        
+        console.log('🏷️ Grupo do usuário detectado:', {
+          grupoOriginal: resposta.data.grupo,
+          grupoProcessado: grupoUsuario,
+          tipo: typeof resposta.data.grupo,
+          respostaCompleta: resposta.data
+        });
+        
+        this.armazenarPapelUsuario(grupoUsuario);
         this.armazenarDadosUsuario(resposta.data.usuario);
         
         console.log('✅ Login realizado com sucesso');
@@ -213,7 +226,12 @@ const servicoAutenticacao = {
    * @returns Papel do usuário ou null
    */
   obterPapelUsuario(): string | null {
-    return localStorage.getItem(CHAVES_STORAGE.PAPEL_USUARIO);
+    const papel = localStorage.getItem(CHAVES_STORAGE.PAPEL_USUARIO);
+    console.log('📖 Obtendo papel do usuário:', {
+      papel: papel,
+      chave: CHAVES_STORAGE.PAPEL_USUARIO
+    });
+    return papel;
   },
 
   /**
@@ -260,9 +278,122 @@ const servicoAutenticacao = {
    */
   fazerLogout(): void {
     console.log('🚪 Fazendo logout do sistema');
+    
+    // Obtém dados antes de limpar para logging
+    const papelUsuario = this.obterPapelUsuario();
+    const dadosUsuario = this.obterDadosUsuario();
+    
+    console.log('👤 Usuário sendo deslogado:', {
+      papel: papelUsuario,
+      nome: dadosUsuario?.nome,
+      login: dadosUsuario?.login
+    });
+    
+    // Limpa todos os dados de sessão
     localStorage.removeItem(CHAVES_STORAGE.TOKEN);
     localStorage.removeItem(CHAVES_STORAGE.PAPEL_USUARIO);
     localStorage.removeItem(CHAVES_STORAGE.DADOS_USUARIO);
+    
+    console.log('✅ Logout realizado com sucesso - dados limpos');
+  },
+
+  /**
+   * Obtém o tipo de usuário logado (aluno ou administrador)
+   * @returns 'aluno' | 'administrador' | null
+   */
+  obterTipoUsuario(): 'aluno' | 'administrador' | null {
+    const papel = this.obterPapelUsuario();
+    
+    console.log('🔍 Verificando tipo de usuário:', {
+      papelBruto: papel,
+      tipo: typeof papel,
+      localStorage: {
+        token: localStorage.getItem('token'),
+        papel: localStorage.getItem('papelUsuario'),
+        dados: localStorage.getItem('dadosUsuario')
+      }
+    });
+    
+    if (!papel) {
+      console.log('⚠️ Nenhum papel de usuário encontrado');
+      return null;
+    }
+    
+    // Normaliza o papel para garantir compatibilidade
+    const papelNormalizado = papel.toLowerCase();
+    
+    console.log('🏷️ Papel normalizado:', papelNormalizado);
+    
+    if (papelNormalizado === 'aluno') {
+      console.log('👨‍🎓 Tipo de usuário detectado: aluno');
+      return 'aluno';
+    } else if (papelNormalizado === 'administrador') {
+      console.log('👨‍💼 Tipo de usuário detectado: administrador');
+      return 'administrador';
+    } else {
+      console.log('⚠️ Papel de usuário desconhecido:', papel);
+      return null;
+    }
+  },
+
+  /**
+   * Faz logout com redirecionamento baseado no tipo de usuário
+   * @returns Promise com o tipo de usuário para redirecionamento
+   */
+  async fazerLogoutComRedirecionamento(): Promise<'aluno' | 'administrador' | null> {
+    try {
+      console.log('🚪 Iniciando logout com redirecionamento');
+      
+      // Obtém o tipo de usuário antes de fazer logout
+      const tipoUsuario = this.obterTipoUsuario();
+      
+      // Faz o logout
+      this.fazerLogout();
+      
+      console.log('✅ Logout realizado, tipo de usuário para redirecionamento:', tipoUsuario);
+      
+      return tipoUsuario;
+    } catch (erro) {
+      console.error('❌ Erro durante logout:', erro);
+      // Mesmo com erro, limpa os dados
+      this.fazerLogout();
+      return null;
+    }
+  },
+
+  /**
+   * Faz logout seguro chamando backend e limpando localStorage
+   * @returns Promise com o tipo de usuário para redirecionamento
+   */
+  async fazerLogoutSeguro(): Promise<'aluno' | 'administrador' | null> {
+    try {
+      console.log('🚪 Iniciando logout seguro');
+      
+      // Obtém o tipo de usuário antes de fazer logout
+      const tipoUsuario = this.obterTipoUsuario();
+      
+      console.log('🔍 Tipo de usuário antes do logout:', tipoUsuario);
+      
+      // Chama backend para invalidar token
+      try {
+        await api.post('/auth/logout');
+        console.log('✅ Backend notificado sobre logout');
+      } catch (erroBackend) {
+        console.warn('⚠️ Erro ao notificar backend, mas continua logout local:', erroBackend);
+      }
+      
+      // Limpa localStorage (sempre executa)
+      this.fazerLogout();
+      
+      console.log('✅ Logout seguro realizado, tipo de usuário para redirecionamento:', tipoUsuario);
+      return tipoUsuario;
+      
+    } catch (erro) {
+      console.error('❌ Erro durante logout seguro:', erro);
+      // Mesmo com erro, limpa os dados
+      this.fazerLogout();
+      return null;
+    }
   },
 
   /**
@@ -278,6 +409,10 @@ const servicoAutenticacao = {
    * @param papel - Papel do usuário
    */
   armazenarPapelUsuario(papel: string): void {
+    console.log('💾 Armazenando papel do usuário:', {
+      papel: papel,
+      chave: CHAVES_STORAGE.PAPEL_USUARIO
+    });
     localStorage.setItem(CHAVES_STORAGE.PAPEL_USUARIO, papel);
   },
 

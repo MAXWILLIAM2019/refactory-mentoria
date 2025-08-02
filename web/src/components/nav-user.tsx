@@ -5,6 +5,10 @@ import {
   IconNotification,
   IconUserCircle,
 } from "@tabler/icons-react"
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import servicoAutenticacao from "@/services/servicoAutenticacao"
+import { toast } from "sonner"
 
 import {
   Avatar,
@@ -37,6 +41,60 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
+  const navigate = useNavigate()
+  const [carregandoLogout, setCarregandoLogout] = useState(false)
+
+  // Handler para logout
+  const handleLogout = async () => {
+    try {
+      console.log('🚪 Iniciando processo de logout')
+      setCarregandoLogout(true)
+
+      // Faz logout seguro e obtém tipo de usuário para redirecionamento
+      const tipoUsuario = await servicoAutenticacao.fazerLogoutSeguro()
+
+      console.log('✅ Logout realizado, tipo de usuário retornado:', tipoUsuario)
+
+      // Toast de sucesso
+      toast.success('Logout realizado com sucesso!', {
+        duration: 3000, // 3 segundos
+        style: {
+          background: '#10b981', // Verde vibrante
+          color: 'white',
+          border: '1px solid #059669'
+        }
+      })
+
+      // Redireciona baseado no tipo de usuário
+      if (tipoUsuario === 'aluno') {
+        console.log('👨‍🎓 Redirecionando aluno para /login')
+        navigate('/login')
+      } else if (tipoUsuario === 'administrador') {
+        console.log('👨‍💼 Redirecionando administrador para /loginAdm')
+        navigate('/loginAdm')
+      } else {
+        console.log('⚠️ Tipo de usuário não detectado, redirecionando para /login')
+        navigate('/login')
+      }
+
+    } catch (erro: any) {
+      console.error('❌ Erro durante logout:', erro)
+      
+      toast.error(erro.message || 'Erro ao fazer logout', {
+        duration: 5000, // 5 segundos para erros
+        style: {
+          background: '#ef4444', // Vermelho vibrante
+          color: 'white',
+          border: '1px solid #dc2626'
+        }
+      })
+      
+      // Mesmo com erro, tenta redirecionar para login
+      navigate('/login')
+    } finally {
+      setCarregandoLogout(false)
+    }
+  }
 
   return (
     <SidebarMenu>
@@ -96,9 +154,13 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem 
+              onClick={handleLogout}
+              disabled={carregandoLogout}
+              className="cursor-pointer"
+            >
               <IconLogout />
-              Sair
+              {carregandoLogout ? 'Saindo...' : 'Sair'}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -81,7 +81,14 @@ export const fazerLogin = async (req: Request, res: Response): Promise<void> => 
 
     if (resultado.sucesso) {
       console.log('✅ Login realizado com sucesso');
-      res.status(200).json(resultado);
+      
+      // Adiciona o grupo na resposta para compatibilidade com frontend
+      const respostaCompleta = {
+        ...resultado,
+        grupo: resultado.usuario?.grupo?.nome || 'aluno'
+      };
+      
+      res.status(200).json(respostaCompleta);
     } else {
       console.log('❌ Falha no login:', resultado.mensagem);
       res.status(401).json(resultado);
@@ -368,6 +375,41 @@ export const criarAluno = async (req: Request, res: Response) => {
     res.status(500).json({ 
       message: 'Erro ao cadastrar aluno', 
       error: errorMessage
+    });
+  }
+}; 
+
+/**
+ * @desc Faz logout do usuário logado
+ * @route POST /api/auth/logout
+ * @access Privado (requer token JWT válido)
+ */
+export const fazerLogout = async (req: RequestAutenticado, res: Response): Promise<void> => {
+  try {
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    const userId = req.usuario?.idusuario;
+    const nomeUsuario = req.usuario?.nomeGrupo;
+    
+    logger.auth(`🚪 Logout iniciado - Usuário: ${userId}, Tipo: ${nomeUsuario}`);
+    
+    // TODO: Implementar blacklist de tokens (FASE 2)
+    // await tokenBlacklist.adicionarTokenRevogado(token);
+    
+    // TODO: Desativar sessão no banco (FASE 3)
+    // await db.sessions.update({ where: { userId, token }, data: { isActive: false } });
+    
+    logger.auth(`✅ Logout realizado com sucesso - Usuário: ${userId}`);
+    
+    res.json({
+      sucesso: true,
+      mensagem: 'Logout realizado com sucesso'
+    });
+    
+  } catch (erro) {
+    logger.error('❌ Erro durante logout:', erro);
+    res.status(500).json({
+      sucesso: false,
+      mensagem: 'Erro interno do servidor'
     });
   }
 }; 
