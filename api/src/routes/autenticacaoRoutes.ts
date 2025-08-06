@@ -6,7 +6,8 @@ import {
   testeAuth,
   cadastrarUsuario,
   criarAluno,
-  fazerLogout
+  fazerLogout,
+  listarAlunos
 } from '../controllers/autenticacaoController';
 import { 
   autenticacao, 
@@ -70,5 +71,12 @@ router.get('/me', autenticacao, obterDadosUsuario);
  * @access Privado (requer token JWT válido)
  */
 router.post('/logout', autenticacao, fazerLogout);
+
+/**
+ * @route GET /api/auth/alunos
+ * @desc Lista todos os alunos do sistema
+ * @access Privado (requer token JWT válido)
+ */
+router.get('/alunos', autenticacao, listarAlunos);
 
 export default router; 

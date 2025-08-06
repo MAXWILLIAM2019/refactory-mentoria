@@ -9,6 +9,7 @@ import { DadosLogin, TipoGrupoUsuario } from '../types/autenticacao';
 import bcrypt from 'bcryptjs';
 import Usuario from '../models/Usuario';
 import GrupoUsuario from '../models/GrupoUsuario';
+import AlunoInfo from '../models/AlunoInfo';
 import { logger } from '../utils/logger';
 
 /**
@@ -407,6 +408,65 @@ export const fazerLogout = async (req: RequestAutenticado, res: Response): Promi
     
   } catch (erro) {
     logger.error('❌ Erro durante logout:', erro);
+    res.status(500).json({
+      sucesso: false,
+      mensagem: 'Erro interno do servidor'
+    });
+  }
+};
+
+/**
+ * Lista todos os alunos do sistema
+ * @route GET /api/auth/alunos
+ * @access Privado (requer token JWT válido)
+ */
+export const listarAlunos = async (req: RequestAutenticado, res: Response): Promise<void> => {
+  try {
+    logger.auth('Solicitação para listar alunos');
+    
+    // Buscar grupo "aluno"
+    const grupoAluno = await GrupoUsuario.findOne({ where: { nome: 'aluno' } });
+    if (!grupoAluno) {
+      logger.error('Grupo "aluno" não encontrado');
+      res.status(400).json({
+        sucesso: false,
+        mensagem: 'Grupo aluno não configurado no sistema'
+      });
+      return;
+    }
+
+    // Buscar todos os usuários do grupo "aluno" com JOIN em aluno_info para pegar email
+    const usuarios = await Usuario.findAll({
+      where: { grupo: grupoAluno.idgrupo },
+      attributes: ['idusuario', 'login', 'nome', 'situacao'],
+      include: [{
+        model: AlunoInfo,
+        as: 'alunoInfo',
+        attributes: ['email'],
+        required: false // LEFT JOIN para casos onde não há aluno_info
+      }],
+      raw: false
+    });
+
+    // Mapear dados para formato da API
+    const alunos = usuarios.map((user: any) => ({
+      id: user.idusuario,
+      nome: user.nome || 'Nome não informado',
+      email: user.alunoInfo?.email || user.login || 'Email não informado', // Prioriza email da aluno_info
+      grupo: 'aluno',
+      situacao: user.situacao
+    }));
+
+    logger.auth(`${alunos.length} alunos encontrados`);
+
+    res.json({
+      sucesso: true,
+      mensagem: `${alunos.length} alunos encontrados`,
+      dados: alunos
+    });
+
+  } catch (erro) {
+    logger.error('Erro ao listar alunos:', erro);
     res.status(500).json({
       sucesso: false,
       mensagem: 'Erro interno do servidor'

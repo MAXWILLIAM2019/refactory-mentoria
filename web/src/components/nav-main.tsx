@@ -1,6 +1,7 @@
-import { IconCirclePlusFilled, IconMail, type Icon } from "@tabler/icons-react"
+import { IconCirclePlusFilled, type Icon } from "@tabler/icons-react"
+import { useLocation, Link } from "react-router-dom"
 
-import { Button } from "@/components/ui/button"
+
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -18,6 +19,7 @@ export function NavMain({
     icon?: Icon
   }[]
 }) {
+  const location = useLocation()
   return (
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
@@ -25,7 +27,7 @@ export function NavMain({
           <SidebarMenuItem className="flex items-center gap-2">
             <SidebarMenuButton
               tooltip="Meu Plano"
-              className="bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground min-w-8 duration-200 ease-linear"
+              className="bg-secondary text-secondary-foreground min-w-8 relative cursor-default hover:bg-secondary hover:text-secondary-foreground focus:bg-secondary focus:text-secondary-foreground active:bg-secondary active:text-secondary-foreground"
             >
               <IconCirclePlusFilled />
               <span>Meu Plano</span>
@@ -41,14 +43,37 @@ export function NavMain({
           </SidebarMenuItem>
         </SidebarMenu>
         <SidebarMenu>
-          {items.map((item) => (
-            <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton tooltip={item.title}>
-                {item.icon && <item.icon />}
-                <span>{item.title}</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
+          {items.map((item) => {
+            // Lógica melhorada para detectar seleção, incluindo rotas dinâmicas
+            const isSelected = location.pathname === item.url || 
+              (item.title === "Dashboard" && (location.pathname === "/dashboard" || location.pathname === "/aluno/dashboard"))
+            
+            // Debug para verificar seleção
+            if (item.title === "Dashboard") {
+              console.log('🎯 Dashboard Selection:', { 
+                itemUrl: item.url, 
+                currentPath: location.pathname, 
+                isSelected 
+              })
+            }
+            
+            return (
+              <SidebarMenuItem key={item.title}>
+                <Link to={item.url} className="w-full cursor-pointer">
+                  <SidebarMenuButton 
+                    tooltip={item.title}
+                    className="relative w-full cursor-pointer"
+                  >
+                    {isSelected && (
+                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-amber-200 dark:bg-amber-700 rounded-r-sm" />
+                    )}
+                    {item.icon && <item.icon />}
+                    <span>{item.title}</span>
+                  </SidebarMenuButton>
+                </Link>
+              </SidebarMenuItem>
+            )
+          })}
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>

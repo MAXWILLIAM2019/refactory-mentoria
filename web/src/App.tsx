@@ -6,6 +6,7 @@ import { AdminRoute, AlunoRoute, PrivateRoute } from './components/ProtectedRout
 import Page from './app/dashboard/page';
 import LoginPage from './app/login/page';
 import LoginAdmPage from './app/loginAdm/page';
+import AlunosPage from './app/alunos/page';
 
 function App() {
   return (
@@ -29,6 +30,15 @@ function App() {
               element={
                 <AdminRoute>
                   <Page />
+                </AdminRoute>
+              } 
+            />
+
+            <Route 
+              path="/alunos" 
+              element={
+                <AdminRoute>
+                  <AlunosPage />
                 </AdminRoute>
               } 
             />

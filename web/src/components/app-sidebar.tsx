@@ -6,17 +6,13 @@ import {
   IconDatabase,
   IconFileAi,
   IconFileDescription,
-  IconFileWord,
   IconFolder,
-  IconHelp,
   IconHistory,
-  IconListDetails,
   IconMessageCircle,
-  IconReport,
-  IconSearch,
   IconSettings,
   IconUsers,
 } from "@tabler/icons-react"
+import { useAuth } from "@/contexts/AuthContext"
 
 import { NavDocuments } from "@/components/nav-documents"
 import { NavMain } from "@/components/nav-main"
@@ -71,7 +67,7 @@ const data = {
     },
     {
       title: "Alunos",
-      url: "#",
+      url: "/alunos",
       icon: IconUsers,
     },
   ],
@@ -160,6 +156,29 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { userRole } = useAuth()
+  
+  // Função para obter a URL correta baseada no tipo de usuário
+  const getDashboardUrl = () => {
+    const url = userRole === 'aluno' ? '/aluno/dashboard' : '/dashboard'
+    console.log('🎯 Dashboard URL:', { userRole, url })
+    return url
+  }
+  
+  // Criar dados dinâmicos baseados no tipo de usuário
+  const dynamicData = {
+    ...data,
+    navMain: data.navMain.map(item => {
+      if (item.title === "Dashboard") {
+        return {
+          ...item,
+          url: getDashboardUrl()
+        }
+      }
+      return item
+    })
+  }
+  
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -169,7 +188,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <a href="#">
+              <a href={getDashboardUrl()}>
                 <img 
                   src="/logoLumia.svg" 
                   alt="Lumia Logo" 
@@ -182,7 +201,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain items={dynamicData.navMain} />
         <NavDocuments items={data.documents} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>

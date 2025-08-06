@@ -188,18 +188,6 @@ export function LoginAdmForm({
     setDialogAberto(true)
   }
 
-  // Handler para fechar dialog
-  const handleFecharDialog = () => {
-    setDialogAberto(false)
-    // Limpa o formulário quando fechar
-    setDadosCadastro({
-      nome: "",
-      login: "",
-      senha: "",
-      grupo: "administrador"
-    })
-    console.log('🧹 Formulário limpo ao fechar dialog')
-  }
 
   // Handler para mudança de estado do dialog
   const handleDialogChange = (aberto: boolean) => {

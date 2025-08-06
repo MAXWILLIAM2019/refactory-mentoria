@@ -15,6 +15,7 @@
 // Importação dos models base
 import Usuario from './Usuario';
 import GrupoUsuario from './GrupoUsuario';
+import AlunoInfo from './AlunoInfo';
 
 /**
  * Configuração dos relacionamentos entre modelos
@@ -34,6 +35,19 @@ GrupoUsuario.hasMany(Usuario, {
   as: 'usuarios' 
 });
 
+// Relacionamento Usuario -> AlunoInfo (1:1)
+console.log('📎 Configurando relacionamento Usuario -> AlunoInfo');
+Usuario.hasOne(AlunoInfo, { 
+  foreignKey: 'idusuario', 
+  as: 'alunoInfo',
+  onDelete: 'CASCADE' 
+});
+
+AlunoInfo.belongsTo(Usuario, { 
+  foreignKey: 'idusuario', 
+  as: 'usuario' 
+});
+
 console.log('✅ Relacionamentos configurados com sucesso!');
 
 /**
@@ -41,7 +55,8 @@ console.log('✅ Relacionamentos configurados com sucesso!');
  */
 export {
   Usuario,
-  GrupoUsuario
+  GrupoUsuario,
+  AlunoInfo
 };
 
 /**
@@ -49,5 +64,6 @@ export {
  */
 export default {
   Usuario,
-  GrupoUsuario
+  GrupoUsuario,
+  AlunoInfo
 }; 

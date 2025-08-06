@@ -139,6 +139,14 @@ desktop.ini
 .yarn-integrity
 
 # ==============================================
+# TYPESCRIPT COMPILADO
+# ==============================================
+# Arquivos .js compilados do TypeScript (só manter .ts originais)
+api/src/**/*.js
+api/src/**/*.js.map
+!api/src/**/*.d.ts
+
+# ==============================================
 # ARQUIVOS ESPECÍFICOS DO PROJETO
 # ==============================================
 # Arquivo temporário de migração
