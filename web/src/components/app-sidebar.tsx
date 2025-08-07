@@ -62,7 +62,7 @@ const data = {
     },
     {
       title: "Planos",
-      url: "#",
+      url: "/planos",
       icon: IconFolder,
     },
     {

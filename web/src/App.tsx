@@ -7,6 +7,7 @@ import Page from './app/dashboard/page';
 import LoginPage from './app/login/page';
 import LoginAdmPage from './app/loginAdm/page';
 import AlunosPage from './app/alunos/page';
+import PlanosPage from './app/planos/page';
 
 function App() {
   return (
@@ -39,6 +40,15 @@ function App() {
               element={
                 <AdminRoute>
                   <AlunosPage />
+                </AdminRoute>
+              } 
+            />
+
+            <Route 
+              path="/planos" 
+              element={
+                <AdminRoute>
+                  <PlanosPage />
                 </AdminRoute>
               } 
             />

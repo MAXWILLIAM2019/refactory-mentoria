@@ -16,6 +16,8 @@ export function SiteHeader() {
         return 'Dashboard'
       case '/alunos':
         return 'Alunos'
+      case '/planos':
+        return 'Planos'
       case '/chat':
         return 'Chat'
       default:
