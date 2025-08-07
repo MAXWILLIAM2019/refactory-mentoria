@@ -7,7 +7,8 @@ import {
   cadastrarUsuario,
   criarAluno,
   fazerLogout,
-  listarAlunos
+  listarAlunos,
+  excluirAluno
 } from '../controllers/autenticacaoController';
 import { 
   autenticacao, 
@@ -78,5 +79,12 @@ router.post('/logout', autenticacao, fazerLogout);
  * @access Privado (requer token JWT válido)
  */
 router.get('/alunos', autenticacao, listarAlunos);
+
+/**
+ * @route DELETE /api/auth/alunos/:id
+ * @desc Exclui um aluno do sistema
+ * @access Privado (requer token JWT válido)
+ */
+router.delete('/alunos/:id', autenticacao, excluirAluno);
 
 export default router; 

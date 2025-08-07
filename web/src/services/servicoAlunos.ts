@@ -212,6 +212,26 @@ class ServicoAlunos {
       return false
     }
   }
+
+  /**
+   * Exclui um aluno do sistema
+   * Endpoint: DELETE /api/auth/alunos/:id
+   */
+  async excluirAluno(id: number): Promise<boolean> {
+    try {
+      const resposta = await this.api.delete<RespostaAPI>(`/auth/alunos/${id}`)
+
+      if (resposta.data.sucesso) {
+        return true
+      } else {
+        throw new Error(resposta.data.mensagem || 'Erro ao excluir aluno')
+      }
+
+    } catch (erro) {
+      console.error('Erro ao excluir aluno:', erro)
+      throw erro
+    }
+  }
 }
 
 // Instância única do serviço (Singleton)

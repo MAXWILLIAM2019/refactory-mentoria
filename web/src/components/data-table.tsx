@@ -49,6 +49,7 @@ import {
 
 import type { DataTableRow } from "@/lib/schemas"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import servicoAlunos from "@/services/servicoAlunos"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -135,8 +136,10 @@ function DraggableRow({ row }: { row: Row<DataTableRow> }) {
 
 export function DataTable({
   data: initialData,
+  onAlunoExcluido,
 }: {
   data: DataTableRow[]
+  onAlunoExcluido?: () => void
 }) {
   const [data, setData] = React.useState(() => initialData)
   const [rowSelection, setRowSelection] = React.useState({})
@@ -286,7 +289,7 @@ export function DataTable({
       },
       {
         id: "actions",
-        cell: () => (
+        cell: ({ row }) => (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -311,9 +314,18 @@ export function DataTable({
                 description="Tem certeza que deseja excluir este aluno? Esta ação não pode ser desfeita."
                 confirmText="Excluir"
                 variant="destructive"
-                onConfirm={() => {
-                  // TODO: Implementar função de exclusão
-                  console.log('Excluir aluno')
+                onConfirm={async () => {
+                  try {
+                    await servicoAlunos.excluirAluno(row.original.id)
+                    
+                    if (onAlunoExcluido) {
+                      onAlunoExcluido()
+                    }
+                    
+                  } catch (erro) {
+                    console.error('Erro ao excluir aluno:', erro)
+                    alert('Erro ao excluir aluno. Tente novamente.')
+                  }
                 }}
               />
             </DropdownMenuContent>

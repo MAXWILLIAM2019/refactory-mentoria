@@ -107,6 +107,8 @@ export const configurarRotaInfo = (app: express.Application): void => {
           test: `GET ${CONFIG.api.prefixo}${CONFIG.api.endpoints.auth}/teste`
         },
         alunos: {
+          listar: `GET ${CONFIG.api.prefixo}${CONFIG.api.endpoints.auth}/alunos`,
+          excluir: `DELETE ${CONFIG.api.prefixo}${CONFIG.api.endpoints.auth}/alunos/:id`,
           cadastrar: `POST ${CONFIG.api.prefixo}/alunos`
         }
       },
@@ -152,6 +154,8 @@ export const configurarTodasRotas = (app: express.Application): void => {
     cadastrarUsuario: `POST ${CONFIG.api.prefixo}${CONFIG.api.endpoints.auth}/cadastrarUsuario`,
     me: `GET ${CONFIG.api.prefixo}${CONFIG.api.endpoints.auth}/me`,
     validate: `POST ${CONFIG.api.prefixo}${CONFIG.api.endpoints.auth}/validar`,
+    listarAlunos: `GET ${CONFIG.api.prefixo}${CONFIG.api.endpoints.auth}/alunos`,
+    excluirAluno: `DELETE ${CONFIG.api.prefixo}${CONFIG.api.endpoints.auth}/alunos/:id`,
     alunos: `POST ${CONFIG.api.prefixo}/alunos`
   });
 }; 

@@ -472,4 +472,75 @@ export const listarAlunos = async (req: RequestAutenticado, res: Response): Prom
       mensagem: 'Erro interno do servidor'
     });
   }
+};
+
+/**
+ * Exclui um aluno do sistema
+ * @route DELETE /api/auth/alunos/:id
+ * @access Privado (requer token JWT válido)
+ */
+export const excluirAluno = async (req: RequestAutenticado, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    logger.auth(`Solicitação para excluir aluno ID: ${id}`);
+    
+    // Validar ID
+    const idAluno = parseInt(id);
+    if (isNaN(idAluno)) {
+      logger.warning('ID do aluno inválido', { id });
+      res.status(400).json({
+        sucesso: false,
+        mensagem: 'ID do aluno inválido'
+      });
+      return;
+    }
+
+    // Buscar grupo "aluno" - mesma estrutura do listarAlunos
+    const grupoAluno = await GrupoUsuario.findOne({ where: { nome: 'aluno' } });
+    if (!grupoAluno) {
+      logger.error('Grupo "aluno" não encontrado');
+      res.status(400).json({
+        sucesso: false,
+        mensagem: 'Grupo aluno não configurado no sistema'
+      });
+      return;
+    }
+
+    // Verificar se o usuário existe e é um aluno
+    const usuarioAluno = await Usuario.findOne({
+      where: { 
+        idusuario: idAluno,
+        grupo: grupoAluno.idgrupo 
+      }
+    });
+
+    if (!usuarioAluno) {
+      logger.warning(`Aluno ID ${idAluno} não encontrado`);
+      res.status(404).json({
+        sucesso: false,
+        mensagem: 'Aluno não encontrado'
+      });
+      return;
+    }
+
+    // Excluir informações adicionais primeiro (se existir)
+    await AlunoInfo.destroy({ where: { idusuario: idAluno } });
+
+    // Excluir o usuário
+    await Usuario.destroy({ where: { idusuario: idAluno } });
+
+    logger.success(`Aluno ${usuarioAluno.nome} (ID: ${idAluno}) excluído com sucesso`);
+
+    res.json({
+      sucesso: true,
+      mensagem: 'Aluno excluído com sucesso'
+    });
+
+  } catch (erro) {
+    logger.error('Erro ao excluir aluno:', erro);
+    res.status(500).json({
+      sucesso: false,
+      mensagem: 'Erro interno do servidor'
+    });
+  }
 }; 

@@ -137,6 +137,7 @@ export function useAlunos() {
     
     // Ações
     buscarAlunos,
+    recarregarAlunos: buscarAlunos, // Alias para recarregar
     atualizarAluno,
     alterarSituacaoAluno,
     buscarAlunoPorId,
