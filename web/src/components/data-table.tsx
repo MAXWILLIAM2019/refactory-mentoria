@@ -31,6 +31,7 @@ import {
   IconPlus,
   IconSearch,
 } from "@tabler/icons-react"
+
 import {
   type ColumnFiltersState,
   flexRender,
@@ -59,6 +60,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
@@ -299,7 +301,21 @@ export function DataTable({
             <DropdownMenuContent align="end" className="w-32">
               <DropdownMenuItem>Editar</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
+              <ConfirmDialog
+                trigger={
+                  <DropdownMenuItem variant="destructive" onSelect={(e) => e.preventDefault()}>
+                    Delete
+                  </DropdownMenuItem>
+                }
+                title="Confirmar exclusão"
+                description="Tem certeza que deseja excluir este aluno? Esta ação não pode ser desfeita."
+                confirmText="Excluir"
+                variant="destructive"
+                onConfirm={() => {
+                  // TODO: Implementar função de exclusão
+                  console.log('Excluir aluno')
+                }}
+              />
             </DropdownMenuContent>
           </DropdownMenu>
         ),
