@@ -1,5 +1,5 @@
 import { LoginForm } from "@/components/login-form"
-import { ModeToggle } from "@/components/mode-toggle-switch"
+import { ModeToggle } from "@/components/mode-toggle-animated"
 
 export default function LoginPage() {
   return (
