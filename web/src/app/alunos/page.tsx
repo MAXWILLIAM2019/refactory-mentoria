@@ -43,21 +43,11 @@ export default function AlunosPage() {
                 <div className="space-y-6">
                   <div>
                     <p className="text-muted-foreground">
-                      Gerencie os alunos do sistema ({alunos.length} alunos)
+                      Gerencie os alunos do sistema
                     </p>
-                    {carregando && (
-                      <p className="text-blue-500 text-sm mt-2">
-                        🔄 Buscando alunos no banco de dados...
-                      </p>
-                    )}
                     {erro && (
                       <p className="text-red-500 text-sm mt-2">
                         ❌ Erro: {erro} (usando dados de exemplo)
-                      </p>
-                    )}
-                    {alunos.length > 0 && !erro && (
-                      <p className="text-green-600 text-sm mt-2">
-                        ✅ {alunos.length} alunos carregados da base de dados
                       </p>
                     )}
                     {alunos.length > 0 && erro && (
