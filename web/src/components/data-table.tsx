@@ -459,22 +459,22 @@ export function DataTable({
             <SelectItem value="past-performance">Todos</SelectItem>
           </SelectContent>
         </Select>
-        <TabsList className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex">
-          <TabsTrigger 
-            value="outline" 
-            onClick={() => setActiveTab("outline")}
-            className="cursor-pointer"
-          >
-            Ativos
-          </TabsTrigger>
-          <TabsTrigger 
-            value="past-performance" 
-            onClick={() => setActiveTab("past-performance")}
-            className="cursor-pointer"
-          >
-            Todos <Badge variant="secondary">3</Badge>
-          </TabsTrigger>
-        </TabsList>
+                 <TabsList className="bg-background h-auto -space-x-px p-0 shadow-xs rtl:space-x-reverse hidden @4xl/main:flex">
+                       <TabsTrigger 
+              value="outline" 
+              onClick={() => setActiveTab("outline")}
+              className="data-[state=active]:bg-muted data-[state=active]:after:bg-primary relative overflow-hidden rounded-none border py-2 after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 first:rounded-s last:rounded-e cursor-pointer"
+            >
+              Ativos <Badge className={`ml-1 ${activeTab === "outline" ? "bg-primary text-primary-foreground" : "bg-foreground/5 text-muted-foreground"}`}>{data.filter(item => item.status === "Done").length}</Badge>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="past-performance" 
+              onClick={() => setActiveTab("past-performance")}
+              className="data-[state=active]:bg-muted data-[state=active]:after:bg-primary relative overflow-hidden rounded-none border py-2 after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 first:rounded-s last:rounded-e cursor-pointer"
+            >
+              Todos <Badge className={`ml-1 ${activeTab === "past-performance" ? "bg-primary text-primary-foreground" : "bg-foreground/5 text-muted-foreground"}`}>{data.length}</Badge>
+            </TabsTrigger>
+         </TabsList>
                                    <div className="flex items-center gap-2">
             <div className="relative">
               <IconSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
@@ -522,16 +522,15 @@ export function DataTable({
                   })}
               </DropdownMenuContent>
             </DropdownMenu>
-            <CadastrarAlunoDialog onAlunoAdicionado={onAlunoExcluido}>
-              <Button 
-                variant="outline" 
-                size="sm"
-                className="cursor-pointer"
-              >
-                <IconPlus />
-                <span className="hidden sm:inline">Cadastrar Aluno</span>
-              </Button>
-            </CadastrarAlunoDialog>
+                         <CadastrarAlunoDialog onAlunoAdicionado={onAlunoExcluido}>
+               <Button 
+                 size="sm"
+                 className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90"
+               >
+                 <IconPlus />
+                 <span className="hidden sm:inline">Cadastrar Aluno</span>
+               </Button>
+             </CadastrarAlunoDialog>
           </div>
       </div>
       <TabsContent
