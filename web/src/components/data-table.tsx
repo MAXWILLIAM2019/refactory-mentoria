@@ -283,27 +283,38 @@ export function DataTable({
       },
       {
         id: "actions",
-        cell: ({ row }) => (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                className="data-[state=open]:bg-muted text-muted-foreground flex size-8"
-                size="icon"
-              >
-                <IconDotsVertical />
-                <span className="sr-only">Open menu</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-32">
-              <DropdownMenuItem>Editar</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <ConfirmDialog
-                trigger={
-                  <DropdownMenuItem variant="destructive" onSelect={(e) => e.preventDefault()}>
+        cell: ({ row }) => {
+          const [showConfirm, setShowConfirm] = React.useState(false)
+          
+          return (
+            <>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="data-[state=open]:bg-muted text-muted-foreground flex size-8"
+                    size="icon"
+                  >
+                    <IconDotsVertical />
+                    <span className="sr-only">Open menu</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-32">
+                  <DropdownMenuItem>Editar</DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem 
+                    variant="destructive"
+                    onClick={() => setShowConfirm(true)}
+                  >
                     Delete
                   </DropdownMenuItem>
-                }
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              <ConfirmDialog
+                trigger={<></>}
+                open={showConfirm}
+                onOpenChange={setShowConfirm}
                 title="Confirmar exclusão"
                 description="Tem certeza que deseja excluir este aluno? Esta ação não pode ser desfeita."
                 confirmText="Excluir"
@@ -325,6 +336,7 @@ export function DataTable({
                       onAlunoExcluido()
                     }
                     
+                    setShowConfirm(false)
                   } catch (erro) {
                     toast.error('Erro ao excluir aluno. Tente novamente.', {
                       duration: 5000,
@@ -334,12 +346,13 @@ export function DataTable({
                         border: '1px solid #dc2626'
                       }
                     })
+                    setShowConfirm(false)
                   }
                 }}
               />
-            </DropdownMenuContent>
-          </DropdownMenu>
-        ),
+            </>
+          )
+        },
       },
     ], []),
     state: {

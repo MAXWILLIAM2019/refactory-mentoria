@@ -19,6 +19,8 @@ interface ConfirmDialogProps {
   cancelText?: string
   onConfirm: () => void
   variant?: "default" | "destructive"
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
 }
 
 export function ConfirmDialog({
@@ -28,10 +30,12 @@ export function ConfirmDialog({
   confirmText = "Confirmar",
   cancelText = "Cancelar",
   onConfirm,
-  variant = "default"
+  variant = "default",
+  open,
+  onOpenChange
 }: ConfirmDialogProps) {
   return (
-    <AlertDialog>
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogTrigger asChild>
         {trigger}
       </AlertDialogTrigger>
