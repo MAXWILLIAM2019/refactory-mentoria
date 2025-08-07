@@ -1,5 +1,5 @@
 import { LoginAdmForm } from "@/components/login-adm-form"
-import { ModeToggle } from "@/components/mode-toggle"
+import { ModeToggle } from "@/components/mode-toggle-switch"
 
 export default function LoginAdmPage() {
   return (

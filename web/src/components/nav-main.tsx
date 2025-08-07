@@ -48,14 +48,6 @@ export function NavMain({
             const isSelected = location.pathname === item.url || 
               (item.title === "Dashboard" && (location.pathname === "/dashboard" || location.pathname === "/aluno/dashboard"))
             
-            // Debug para verificar seleção
-            if (item.title === "Dashboard") {
-              console.log('🎯 Dashboard Selection:', { 
-                itemUrl: item.url, 
-                currentPath: location.pathname, 
-                isSelected 
-              })
-            }
             
             return (
               <SidebarMenuItem key={item.title}>
@@ -65,7 +57,7 @@ export function NavMain({
                     className="relative w-full cursor-pointer"
                   >
                     {isSelected && (
-                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-amber-200 dark:bg-amber-700 rounded-r-sm" />
+                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-amber-700 dark:bg-amber-700 rounded-r-sm" />
                     )}
                     {item.icon && <item.icon />}
                     <span>{item.title}</span>
