@@ -426,7 +426,7 @@ export function DataTable({
         </Label>
         <Select defaultValue="outline" value={activeTab} onValueChange={setActiveTab}>
           <SelectTrigger
-            className="flex w-fit @4xl/main:hidden"
+            className="flex w-fit @4xl/main:hidden cursor-pointer"
             size="sm"
             id="view-selector"
           >
@@ -438,8 +438,18 @@ export function DataTable({
           </SelectContent>
         </Select>
         <TabsList className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex">
-          <TabsTrigger value="outline" onClick={() => setActiveTab("outline")}>Ativos</TabsTrigger>
-          <TabsTrigger value="past-performance" onClick={() => setActiveTab("past-performance")}>
+          <TabsTrigger 
+            value="outline" 
+            onClick={() => setActiveTab("outline")}
+            className="cursor-pointer"
+          >
+            Ativos
+          </TabsTrigger>
+          <TabsTrigger 
+            value="past-performance" 
+            onClick={() => setActiveTab("past-performance")}
+            className="cursor-pointer"
+          >
             Todos <Badge variant="secondary">3</Badge>
           </TabsTrigger>
         </TabsList>
@@ -457,7 +467,7 @@ export function DataTable({
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" className="cursor-pointer">
                   <IconLayoutColumns />
                   <span className="hidden lg:inline">Personalizar Colunas</span>
                   <span className="lg:hidden">Colunas</span>
@@ -490,7 +500,15 @@ export function DataTable({
                   })}
               </DropdownMenuContent>
             </DropdownMenu>
-            <Button variant="outline" size="sm">
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => {
+                // TODO: Implementar modal ou navegação para cadastro de aluno
+                console.log('Clicou em Cadastrar Aluno')
+              }}
+              className="cursor-pointer"
+            >
               <IconPlus />
               <span className="hidden lg:inline">Cadastrar Aluno</span>
             </Button>
