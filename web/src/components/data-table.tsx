@@ -234,7 +234,7 @@ export function DataTable({
           return (
             <div className="flex items-center space-x-3">
               <Avatar className="h-8 w-8">
-                <AvatarFallback className="text-xs font-medium">
+                <AvatarFallback className="bg-muted text-muted-foreground text-xs font-medium">
                   {iniciais}
                 </AvatarFallback>
               </Avatar>

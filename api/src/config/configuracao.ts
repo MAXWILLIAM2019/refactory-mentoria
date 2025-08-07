@@ -39,7 +39,7 @@ export const CORS = {
 export const BANCO_DADOS = {
   nome: process.env.DB_NAME || 'mentoria_sistema',
   usuario: process.env.DB_USER || 'postgres',
-  senha: process.env.DB_PASS || '',
+  senha: process.env.DB_PASS || '1127',
   host: process.env.DB_HOST || 'localhost',
   porta: parseInt(process.env.DB_PORT || '5432'),
   dialeto: 'postgres' as const,

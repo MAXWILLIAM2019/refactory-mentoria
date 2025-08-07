@@ -1,7 +1,8 @@
-import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { ModeToggle } from "@/components/mode-toggle-animated"
+import UserProfileDropdown from "@/components/user-profile-dropdown"
+import NotificationsDropdown from "@/components/notifications-dropdown"
 import { useLocation } from "react-router-dom"
 
 export function SiteHeader() {
@@ -31,18 +32,10 @@ export function SiteHeader() {
           className="mx-2 data-[orientation=vertical]:h-4"
         />
         <h1 className="text-2xl font-bold">{getPageTitle()}</h1>
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ml-auto flex items-center gap-4">
           <ModeToggle />
-          <Button variant="ghost" asChild size="sm" className="hidden sm:flex">
-            <a
-              href="https://github.com/shadcn-ui/ui/tree/main/apps/v4/app/(examples)/dashboard"
-              rel="noopener noreferrer"
-              target="_blank"
-              className="dark:text-foreground"
-            >
-              GitHub
-            </a>
-          </Button>
+          <NotificationsDropdown />
+          <UserProfileDropdown />
         </div>
       </div>
     </header>
