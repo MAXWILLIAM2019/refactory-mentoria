@@ -4,9 +4,19 @@ import {
   LocateFixed,
   FileSymlink,
   PackageCheck,
+  Search,
+  ChevronDownIcon,
 } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import {
   Tabs,
@@ -85,6 +95,35 @@ export default function PlanosTabs() {
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
       <TabsContent value="planos">
+        <div className="flex items-center space-x-2 mb-4">
+          <Button className="bg-primary cursor-pointer">
+            Cadastrar
+          </Button>
+          <div className="relative flex-1 max-w-sm">
+            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Buscar planos..."
+              className="pl-8"
+            />
+          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="cursor-pointer">
+                Todos
+                <ChevronDownIcon
+                  className="-me-1 opacity-60"
+                  size={16}
+                  aria-hidden="true"
+                />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="min-w-(--radix-dropdown-menu-trigger-width)">
+              <DropdownMenuItem>Todos</DropdownMenuItem>
+              <DropdownMenuItem>Ativos</DropdownMenuItem>
+              <DropdownMenuItem>Inativos</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
         <div className="rounded-lg border bg-card p-6">
           <h3 className="text-lg font-semibold mb-4">Planos Ativos</h3>
           <p className="text-muted-foreground text-base">
