@@ -9,7 +9,7 @@ import { useAlunos } from "@/hooks/useAlunos"
 import type { DataTableRow } from "@/lib/schemas"
 
 export default function AlunosPage() {
-  const { alunos, erro, recarregarAlunos } = useAlunos()
+  const { alunos, erro, recarregarAlunos, carregando } = useAlunos()
   
   // Mapear os dados reais dos alunos para o formato da tabela
   const dadosTabela: DataTableRow[] = alunos.length > 0 ? alunos.map(aluno => ({
@@ -61,6 +61,7 @@ export default function AlunosPage() {
               <DataTable 
                 data={dadosTabela} 
                 onAlunoExcluido={recarregarAlunos}
+                carregandoExterno={carregando}
               />
             </div>
           </div>

@@ -340,23 +340,13 @@ export function DashboardTable({
     pageIndex: 0,
     pageSize: 10,
   })
-  const [carregando, setCarregando] = React.useState(true)
+  const carregando = false
   const sortableId = React.useId()
   const sensors = useSensors(
     useSensor(MouseSensor, {}),
     useSensor(TouchSensor, {}),
     useSensor(KeyboardSensor, {})
   )
-
-  // TODO: REMOVER ESTE DELAY SIMULADO - Substituir por loading real baseado em dados da API
-  // Quando implementar dados reais: remover este useEffect e usar loading baseado em dados
-  React.useEffect(() => {
-    const timer = setTimeout(() => {
-      setCarregando(false)
-    }, 6000) // 6 segundos de delay
-
-    return () => clearTimeout(timer)
-  }, [])
 
   const dataIds = React.useMemo<UniqueIdentifier[]>(
     () => data?.map(({ id }) => id) || [],
@@ -400,52 +390,6 @@ export function DashboardTable({
         return arrayMove(data, oldIndex, newIndex)
       })
     }
-  }
-
-  // Componente Skeleton para a tabela
-  const TableSkeleton = () => (
-    <Tabs
-      defaultValue="outline"
-      className="w-full flex-col justify-start gap-6"
-    >
-      <div className="flex items-center justify-between px-4 lg:px-6">
-        <Skeleton className="h-8 w-32" />
-        <div className="flex items-center gap-2">
-          <Skeleton className="h-8 w-32" />
-          <Skeleton className="h-8 w-24" />
-        </div>
-      </div>
-      <TabsContent
-        value="outline"
-        className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
-      >
-        <div className="overflow-hidden rounded-lg border">
-          <div className="bg-muted p-4">
-            <Skeleton className="h-4 w-24 mb-2" />
-            <Skeleton className="h-4 w-32" />
-          </div>
-          <div className="p-4 space-y-3">
-            {[...Array(5)].map((_, i) => (
-              <div key={i} className="flex items-center space-x-4">
-                <Skeleton className="h-4 w-4" />
-                <Skeleton className="h-4 w-4" />
-                <Skeleton className="h-4 w-32" />
-                <Skeleton className="h-4 w-20" />
-                <Skeleton className="h-4 w-16" />
-                <Skeleton className="h-4 w-24" />
-                <Skeleton className="h-4 w-20" />
-                <Skeleton className="h-4 w-4" />
-              </div>
-            ))}
-          </div>
-        </div>
-      </TabsContent>
-    </Tabs>
-  )
-
-  // Se estiver carregando, mostra skeleton
-  if (carregando) {
-    return <TableSkeleton />
   }
 
   return (

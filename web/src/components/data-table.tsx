@@ -139,9 +139,11 @@ function DraggableRow({ row }: { row: Row<DataTableRow> }) {
 export function DataTable({
   data: initialData,
   onAlunoExcluido,
+  carregandoExterno,
 }: {
   data: DataTableRow[]
   onAlunoExcluido?: () => void
+  carregandoExterno?: boolean
 }) {
   const [data, setData] = React.useState(() => initialData)
   const [rowSelection, setRowSelection] = React.useState({})
@@ -164,6 +166,8 @@ export function DataTable({
     useSensor(TouchSensor, {}),
     useSensor(KeyboardSensor, {})
   )
+
+  const isLoading = carregandoExterno ?? carregando
 
   // Atualiza dados internos quando initialData muda
   React.useEffect(() => {
@@ -433,7 +437,7 @@ export function DataTable({
   )
 
   // Se estiver carregando, mostra skeleton
-  if (carregando) {
+  if (isLoading) {
     return <TableSkeleton />
   }
 
