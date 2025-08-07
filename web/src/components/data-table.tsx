@@ -480,7 +480,7 @@ export function DataTable({
               <IconSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
               <Input
                 placeholder="Pesquisar..."
-                className="w-80 h-8 pl-10"
+                className="w-32 sm:w-48 lg:w-80 h-8 pl-10"
                 value={globalFilter}
                 onChange={(e) => {
                   setGlobalFilter(e.target.value)
@@ -491,8 +491,8 @@ export function DataTable({
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="cursor-pointer">
                   <IconLayoutColumns />
-                  <span className="hidden lg:inline">Personalizar Colunas</span>
-                  <span className="lg:hidden">Colunas</span>
+                  <span className="hidden sm:inline">Personalizar Colunas</span>
+                  <span className="sm:hidden">Colunas</span>
                   <IconChevronDown />
                 </Button>
               </DropdownMenuTrigger>
@@ -529,7 +529,7 @@ export function DataTable({
                 className="cursor-pointer"
               >
                 <IconPlus />
-                <span className="hidden lg:inline">Cadastrar Aluno</span>
+                <span className="hidden sm:inline">Cadastrar Aluno</span>
               </Button>
             </CadastrarAlunoDialog>
           </div>
