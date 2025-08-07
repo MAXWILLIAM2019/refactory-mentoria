@@ -97,11 +97,6 @@ const servicoAutenticacao = {
    */
   async fazerLogin(dadosLogin: DadosLogin): Promise<RespostaAutenticacao> {
     try {
-      console.log('🔐 Iniciando processo de login:', {
-        login: dadosLogin.login,
-        grupo: dadosLogin.grupo
-      });
-
       const resposta = await api.post('/auth/login', dadosLogin);
       
       if (resposta.data.sucesso && resposta.data.token) {
@@ -113,23 +108,14 @@ const servicoAutenticacao = {
           ? resposta.data.grupo 
           : resposta.data.grupo?.nome || 'aluno';
         
-        console.log('🏷️ Grupo do usuário detectado:', {
-          grupoOriginal: resposta.data.grupo,
-          grupoProcessado: grupoUsuario,
-          tipo: typeof resposta.data.grupo,
-          respostaCompleta: resposta.data
-        });
-        
         this.armazenarPapelUsuario(grupoUsuario);
         this.armazenarDadosUsuario(resposta.data.usuario);
         
-        console.log('✅ Login realizado com sucesso');
         return resposta.data;
       } else {
         throw new Error('Resposta inválida do servidor');
       }
     } catch (erro: any) {
-      console.error('❌ Erro no login:', erro);
       
       if (erro.response?.data?.mensagem) {
         throw new Error(erro.response.data.mensagem);
@@ -153,10 +139,7 @@ const servicoAutenticacao = {
     grupo: 'aluno' | 'administrador';
   }): Promise<RespostaAutenticacao> {
     try {
-      console.log('📝 Iniciando cadastro de usuário');
-      
       const resposta = await api.post('/auth/cadastrarUsuario', dadosCadastro);
-      console.log('📨 Resposta bruta da API:', resposta.data);
       
       // Normaliza a resposta para o formato esperado
       const respostaNormalizada = {
@@ -167,11 +150,8 @@ const servicoAutenticacao = {
         grupo: resposta.data.grupo
       };
       
-      console.log('✅ Usuário cadastrado com sucesso');
-      console.log('📋 Resposta normalizada:', respostaNormalizada);
       return respostaNormalizada;
     } catch (erro: any) {
-      console.error('❌ Erro no cadastro:', erro);
       
       if (erro.response?.data?.mensagem) {
         throw new Error(erro.response.data.mensagem);
@@ -191,20 +171,16 @@ const servicoAutenticacao = {
   async cadastrarAluno(dadosAluno: {
     nome: string;
     email: string;
-    cpf: string;
     senha?: string;
   }): Promise<RespostaAutenticacao> {
     try {
-      console.log('👨‍🎓 Iniciando cadastro de aluno');
-      
       const resposta = await api.post('/alunos', dadosAluno);
-      
-      console.log('✅ Aluno cadastrado com sucesso');
       return resposta.data;
     } catch (erro: any) {
-      console.error('❌ Erro no cadastro de aluno:', erro);
       
-      if (erro.response?.data?.mensagem) {
+      if (erro.response?.data?.message) {
+        throw new Error(erro.response.data.message);
+      } else if (erro.response?.data?.mensagem) {
         throw new Error(erro.response.data.mensagem);
       } else {
         throw new Error('Erro ao cadastrar aluno');
@@ -227,10 +203,6 @@ const servicoAutenticacao = {
    */
   obterPapelUsuario(): string | null {
     const papel = localStorage.getItem(CHAVES_STORAGE.PAPEL_USUARIO);
-    console.log('📖 Obtendo papel do usuário:', {
-      papel: papel,
-      chave: CHAVES_STORAGE.PAPEL_USUARIO
-    });
     return papel;
   },
 
@@ -254,7 +226,6 @@ const servicoAutenticacao = {
       });
       return resposta.data.valido;
     } catch (erro) {
-      console.error('❌ Erro ao validar token:', erro);
       return false;
     }
   },
@@ -268,7 +239,6 @@ const servicoAutenticacao = {
       const resposta = await api.get('/auth/me');
       return resposta.data.usuario;
     } catch (erro) {
-      console.error('❌ Erro ao obter dados do usuário:', erro);
       throw new Error('Erro ao obter dados do usuário');
     }
   },
@@ -277,24 +247,10 @@ const servicoAutenticacao = {
    * Faz logout do sistema
    */
   fazerLogout(): void {
-    console.log('🚪 Fazendo logout do sistema');
-    
-    // Obtém dados antes de limpar para logging
-    const papelUsuario = this.obterPapelUsuario();
-    const dadosUsuario = this.obterDadosUsuario();
-    
-    console.log('👤 Usuário sendo deslogado:', {
-      papel: papelUsuario,
-      nome: dadosUsuario?.nome,
-      login: dadosUsuario?.login
-    });
-    
     // Limpa todos os dados de sessão
     localStorage.removeItem(CHAVES_STORAGE.TOKEN);
     localStorage.removeItem(CHAVES_STORAGE.PAPEL_USUARIO);
     localStorage.removeItem(CHAVES_STORAGE.DADOS_USUARIO);
-    
-    console.log('✅ Logout realizado com sucesso - dados limpos');
   },
 
   /**
@@ -304,34 +260,18 @@ const servicoAutenticacao = {
   obterTipoUsuario(): 'aluno' | 'administrador' | null {
     const papel = this.obterPapelUsuario();
     
-    console.log('🔍 Verificando tipo de usuário:', {
-      papelBruto: papel,
-      tipo: typeof papel,
-      localStorage: {
-        token: localStorage.getItem('token'),
-        papel: localStorage.getItem('papelUsuario'),
-        dados: localStorage.getItem('dadosUsuario')
-      }
-    });
-    
     if (!papel) {
-      console.log('⚠️ Nenhum papel de usuário encontrado');
       return null;
     }
     
     // Normaliza o papel para garantir compatibilidade
     const papelNormalizado = papel.toLowerCase();
     
-    console.log('🏷️ Papel normalizado:', papelNormalizado);
-    
     if (papelNormalizado === 'aluno') {
-      console.log('👨‍🎓 Tipo de usuário detectado: aluno');
       return 'aluno';
     } else if (papelNormalizado === 'administrador') {
-      console.log('👨‍💼 Tipo de usuário detectado: administrador');
       return 'administrador';
     } else {
-      console.log('⚠️ Papel de usuário desconhecido:', papel);
       return null;
     }
   },
@@ -342,19 +282,14 @@ const servicoAutenticacao = {
    */
   async fazerLogoutComRedirecionamento(): Promise<'aluno' | 'administrador' | null> {
     try {
-      console.log('🚪 Iniciando logout com redirecionamento');
-      
       // Obtém o tipo de usuário antes de fazer logout
       const tipoUsuario = this.obterTipoUsuario();
       
       // Faz o logout
       this.fazerLogout();
       
-      console.log('✅ Logout realizado, tipo de usuário para redirecionamento:', tipoUsuario);
-      
       return tipoUsuario;
     } catch (erro) {
-      console.error('❌ Erro durante logout:', erro);
       // Mesmo com erro, limpa os dados
       this.fazerLogout();
       return null;
@@ -367,29 +302,22 @@ const servicoAutenticacao = {
    */
   async fazerLogoutSeguro(): Promise<'aluno' | 'administrador' | null> {
     try {
-      console.log('🚪 Iniciando logout seguro');
-      
       // Obtém o tipo de usuário antes de fazer logout
       const tipoUsuario = this.obterTipoUsuario();
-      
-      console.log('🔍 Tipo de usuário antes do logout:', tipoUsuario);
       
       // Chama backend para invalidar token
       try {
         await api.post('/auth/logout');
-        console.log('✅ Backend notificado sobre logout');
       } catch (erroBackend) {
-        console.warn('⚠️ Erro ao notificar backend, mas continua logout local:', erroBackend);
+        // Ignora erro do backend e continua com logout local
       }
       
       // Limpa localStorage (sempre executa)
       this.fazerLogout();
       
-      console.log('✅ Logout seguro realizado, tipo de usuário para redirecionamento:', tipoUsuario);
       return tipoUsuario;
       
     } catch (erro) {
-      console.error('❌ Erro durante logout seguro:', erro);
       // Mesmo com erro, limpa os dados
       this.fazerLogout();
       return null;
@@ -409,10 +337,6 @@ const servicoAutenticacao = {
    * @param papel - Papel do usuário
    */
   armazenarPapelUsuario(papel: string): void {
-    console.log('💾 Armazenando papel do usuário:', {
-      papel: papel,
-      chave: CHAVES_STORAGE.PAPEL_USUARIO
-    });
     localStorage.setItem(CHAVES_STORAGE.PAPEL_USUARIO, papel);
   },
 

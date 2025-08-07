@@ -50,6 +50,8 @@ import {
 import type { DataTableRow } from "@/lib/schemas"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import servicoAlunos from "@/services/servicoAlunos"
+import { CadastrarAlunoDialog } from "@/components/cadastrar-aluno-dialog"
+import { toast } from "sonner"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -168,16 +170,8 @@ export function DataTable({
     setData(initialData)
   }, [initialData])
 
-  // TODO: REMOVER ESTE DELAY SIMULADO - Substituir por loading real baseado em dados da API
-  // Quando implementar dados reais: remover este useEffect e usar loading baseado em dados
   React.useEffect(() => {
-    // Desabilitado temporariamente para debug
     setCarregando(false)
-    // const timer = setTimeout(() => {
-    //   setCarregando(false)
-    // }, 1000) // 1 segundo de delay (reduzido para desenvolvimento)
-
-    // return () => clearTimeout(timer)
   }, [])
 
   const dataIds = React.useMemo<UniqueIdentifier[]>(
@@ -318,13 +312,28 @@ export function DataTable({
                   try {
                     await servicoAlunos.excluirAluno(row.original.id)
                     
+                    toast.success('Aluno excluído com sucesso!', {
+                      duration: 4000,
+                      style: {
+                        background: '#10b981',
+                        color: 'white',
+                        border: '1px solid #059669'
+                      }
+                    })
+                    
                     if (onAlunoExcluido) {
                       onAlunoExcluido()
                     }
                     
                   } catch (erro) {
-                    console.error('Erro ao excluir aluno:', erro)
-                    alert('Erro ao excluir aluno. Tente novamente.')
+                    toast.error('Erro ao excluir aluno. Tente novamente.', {
+                      duration: 5000,
+                      style: {
+                        background: '#ef4444',
+                        color: 'white',
+                        border: '1px solid #dc2626'
+                      }
+                    })
                   }
                 }}
               />
@@ -500,18 +509,16 @@ export function DataTable({
                   })}
               </DropdownMenuContent>
             </DropdownMenu>
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => {
-                // TODO: Implementar modal ou navegação para cadastro de aluno
-                console.log('Clicou em Cadastrar Aluno')
-              }}
-              className="cursor-pointer"
-            >
-              <IconPlus />
-              <span className="hidden lg:inline">Cadastrar Aluno</span>
-            </Button>
+            <CadastrarAlunoDialog onAlunoAdicionado={onAlunoExcluido}>
+              <Button 
+                variant="outline" 
+                size="sm"
+                className="cursor-pointer"
+              >
+                <IconPlus />
+                <span className="hidden lg:inline">Cadastrar Aluno</span>
+              </Button>
+            </CadastrarAlunoDialog>
           </div>
       </div>
       <TabsContent

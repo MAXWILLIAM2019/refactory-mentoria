@@ -225,8 +225,8 @@ export const cadastrarUsuario = async (req: Request, res: Response) => {
     if (!nome || !login || !senha || !grupo) {
       logger.warning('Tentativa de cadastro com campos faltantes', { campos: { nome, login, senha, grupo } });
       return res.status(400).json({ 
-        success: false, 
-        message: 'Preencha todos os campos obrigatórios.' 
+        sucesso: false, 
+        mensagem: 'Preencha todos os campos obrigatórios.' 
       });
     }
 
@@ -235,8 +235,8 @@ export const cadastrarUsuario = async (req: Request, res: Response) => {
     if (usuarioExistente) {
       logger.warning('Tentativa de cadastro com login já existente', { login });
       return res.status(400).json({ 
-        success: false, 
-        message: 'Login já está em uso.' 
+        sucesso: false, 
+        mensagem: 'Login já está em uso.' 
       });
     }
 
@@ -245,8 +245,8 @@ export const cadastrarUsuario = async (req: Request, res: Response) => {
     if (!grupoObj) {
       logger.warning('Tentativa de cadastro com grupo inválido', { grupo });
       return res.status(400).json({ 
-        success: false, 
-        message: 'Grupo de usuário inválido.' 
+        sucesso: false, 
+        mensagem: 'Grupo de usuário inválido.' 
       });
     }
 
@@ -271,15 +271,15 @@ export const cadastrarUsuario = async (req: Request, res: Response) => {
     });
 
     return res.status(201).json({ 
-      success: true, 
-      message: 'Usuário cadastrado com sucesso!' 
+      sucesso: true, 
+      mensagem: 'Usuário cadastrado com sucesso!' 
     });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
     logger.error('Erro ao cadastrar usuário', { error: errorMessage });
     res.status(500).json({ 
-      success: false, 
-      message: 'Erro ao cadastrar usuário.' 
+      sucesso: false, 
+      mensagem: 'Erro ao cadastrar usuário.' 
     });
   }
 };
@@ -291,17 +291,18 @@ export const cadastrarUsuario = async (req: Request, res: Response) => {
  */
 export const criarAluno = async (req: Request, res: Response) => {
   try {
-    const { nome, email, cpf, senha } = req.body;
+    const { nome, email, senha } = req.body;
     
     logger.auth('Tentativa de cadastro de aluno', { email });
     
     // Validação de campos obrigatórios
-    if (!nome || !email || !cpf) {
+    if (!nome || !email) {
       logger.warning('Tentativa de cadastro de aluno com campos faltantes', { 
-        campos: { nome, email, cpf } 
+        campos: { nome, email } 
       });
       return res.status(400).json({ 
-        message: 'Preencha nome, email e CPF.' 
+        sucesso: false,
+        mensagem: 'Preencha nome e email.' 
       });
     }
 
@@ -310,16 +311,8 @@ export const criarAluno = async (req: Request, res: Response) => {
     if (usuarioExistente) {
       logger.warning('Tentativa de cadastro de aluno com email já existente', { email });
       return res.status(400).json({ 
-        message: 'Já existe um usuário com este email.' 
-      });
-    }
-
-    // Verifica se já existe usuário com o mesmo CPF
-    const cpfExistente = await Usuario.findOne({ where: { cpf } });
-    if (cpfExistente) {
-      logger.warning('Tentativa de cadastro de aluno com CPF já existente', { cpf });
-      return res.status(400).json({ 
-        message: 'Já existe um usuário com este CPF.' 
+        sucesso: false,
+        mensagem: 'Já existe um usuário com este email.' 
       });
     }
 
@@ -328,7 +321,8 @@ export const criarAluno = async (req: Request, res: Response) => {
     if (!grupoObj) {
       logger.error('Grupo de usuário "aluno" não encontrado');
       return res.status(400).json({ 
-        message: 'Grupo de usuário "aluno" não encontrado.' 
+        sucesso: false,
+        mensagem: 'Grupo de usuário "aluno" não encontrado.' 
       });
     }
 
@@ -344,8 +338,7 @@ export const criarAluno = async (req: Request, res: Response) => {
       senha: senhaCriptografada,
       grupo: grupoObj.idgrupo,
       situacao: true,
-      nome: nome,
-      cpf: cpf
+      nome: nome
     });
 
     // Monta resposta (sem senha)
@@ -358,8 +351,8 @@ export const criarAluno = async (req: Request, res: Response) => {
     });
 
     res.status(201).json({ 
-      success: true,
-      message: 'Aluno cadastrado com sucesso!',
+      sucesso: true,
+      mensagem: 'Aluno cadastrado com sucesso!',
       usuario: usuarioSemSenha
     });
   } catch (error) {
@@ -369,13 +362,14 @@ export const criarAluno = async (req: Request, res: Response) => {
     // Verifica se é erro de constraint única
     if (error instanceof Error && error.name === 'SequelizeUniqueConstraintError') {
       return res.status(400).json({ 
-        message: 'Já existe um aluno cadastrado com este email ou CPF.' 
+        sucesso: false,
+        mensagem: 'Já existe um aluno cadastrado com este email.' 
       });
     }
     
     res.status(500).json({ 
-      message: 'Erro ao cadastrar aluno', 
-      error: errorMessage
+      sucesso: false,
+      mensagem: 'Erro ao cadastrar aluno'
     });
   }
 }; 
